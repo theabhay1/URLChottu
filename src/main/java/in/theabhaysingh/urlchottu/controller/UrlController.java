@@ -2,10 +2,8 @@ package in.theabhaysingh.urlchottu.controller;
 
 import in.theabhaysingh.urlchottu.dto.CreateUrlRequest;
 import in.theabhaysingh.urlchottu.service.UrlService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
 public class UrlController {
@@ -15,9 +13,16 @@ public class UrlController {
         this.urlService = urlService;
     }
 
-    //receive long url and return short url
+    //receives original url and return short url
     @PostMapping("/createShortUrl")
     public String createShortUrl(@RequestBody CreateUrlRequest createUrlRequest) {
         return urlService.createShortUrl(createUrlRequest);
+    }
+
+    //receives short url and redirect to original url
+    @GetMapping("/redirect/{shortCode}")
+    public RedirectView getOriginalUrl(@PathVariable String shortCode) {
+        String url =  urlService.getOriginalUrl(shortCode);
+        return new RedirectView(url);
     }
 }

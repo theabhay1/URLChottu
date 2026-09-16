@@ -27,4 +27,10 @@ public class UrlService {
 
         return encoderDecoder.encode(urlEntity.getId());
     }
+
+    public String getOriginalUrl(String shortUrl) {
+        Long id = encoderDecoder.decode(shortUrl);
+
+        return urlRepository.findById(id).get().getOriginalUrl();
+    }
 }
