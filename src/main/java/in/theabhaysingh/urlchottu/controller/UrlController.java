@@ -1,9 +1,12 @@
 package in.theabhaysingh.urlchottu.controller;
 
 import in.theabhaysingh.urlchottu.dto.CreateUrlRequest;
+import in.theabhaysingh.urlchottu.exception.ShortCodeNotFoundException;
 import in.theabhaysingh.urlchottu.service.UrlService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
+
+import java.io.IOException;
 
 @RestController
 public class UrlController {
@@ -21,8 +24,14 @@ public class UrlController {
 
     //receives short url and redirect to original url
     @GetMapping("/redirect/{shortCode}")
-    public RedirectView getOriginalUrl(@PathVariable String shortCode) {
+    public void getOriginalUrl(@PathVariable String shortCode, HttpServletResponse response) throws IOException {
         String url =  urlService.getOriginalUrl(shortCode);
-        return new RedirectView(url);
+        response.sendRedirect(url);
     }
+
+    @GetMapping({"/redirect", "/redirect/"})
+    public void handleEmptyRedirect() {
+        throw new ShortCodeNotFoundException("Kindly enter complete URL.");
+    }
+
 }
